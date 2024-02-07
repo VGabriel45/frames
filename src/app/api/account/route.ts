@@ -11,8 +11,8 @@ import { pimlicoBundlerActions } from "permissionless/actions/pimlico";
 import { createPimlicoPaymasterClient } from "permissionless/clients/pimlico";
 import { Address, createPublicClient, http } from "viem";
 import { sepolia } from "viem/chains";
+import Wallet from "ethereumjs-wallet";
 
-const privateKey = process.env.PRIVATE_KEY!;
 const apiKey = process.env.PIMLICO_API_KEY!;
 const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`;
 const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${apiKey}`;
@@ -39,7 +39,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse("Invalid Frame message", { status: 400 });
   }
 
-  const accountAddress = message.interactor.verified_accounts[0] as Address;
+  const wallet = Wallet.generate();
+  const publicKey = wallet.getPublicKeyString();
+  const privateKey = wallet.getPrivateKeyString();
+
+  console.log(publicKey, 'CREATED EOA ADDRESS');
 
   // send transaction
   const account = await privateKeyToBiconomySmartAccount(publicClient, {
@@ -56,6 +60,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   })
     .extend(bundlerActions)
     .extend(pimlicoBundlerActions);
+
+  console.log(smartAccountClient.account.address, 'ACCOUNT ADDRESS');
 
   const callData = await account.encodeCallData({
     to: "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
