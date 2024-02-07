@@ -26,8 +26,10 @@ const paymasterClient = createPimlicoPaymasterClient({
 });
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  console.log('IN MINT NFT ROUTE');
   const body: FrameRequest = await req.json();
   const { searchParams } = new URL(req.url);
+  console.log(searchParams, 'search params');
   const { isValid, message } = await getFrameMessage(body, {
     neynarApiKey: process.env.NEYNAR_API_KEY!,
   });
