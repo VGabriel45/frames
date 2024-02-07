@@ -31,4 +31,4 @@ export const METADATA: Metadata = {
   },
 };
 
-export const NEXT_PUBLIC_URL = "https://frames-delta.vercel.app/";
+export const NEXT_PUBLIC_URL = "https://frames-delta.vercel.app";
