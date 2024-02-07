@@ -3,4 +3,4 @@
 /simple
 
 
-/smart-account-template
+/smart-account-template# frames
