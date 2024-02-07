@@ -14,6 +14,8 @@ import { sepolia } from "viem/chains";
 import Wallet from "ethereumjs-wallet";
 
 const apiKey = process.env.PIMLICO_API_KEY!;
+console.log(apiKey, 'API KEY');
+
 const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`;
 const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${apiKey}`;
 
