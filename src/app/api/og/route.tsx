@@ -6,15 +6,8 @@ export const dynamic = "force-dynamic";
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const userOpHash = searchParams.get("userOpHash");
     const address = searchParams.get("address");
     const fid = searchParams.get("fid");
-
-    if (!userOpHash) {
-      return new Response(`The userOpHash parameter is required`, {
-        status: 400,
-      });
-    }
 
     if (!address) {
       return new Response(`The address parameter is required`, {
@@ -41,10 +34,6 @@ export async function GET(request: Request) {
           }}
         >
           <div style={{ display: "flex" }}>
-            User Operation hash: {userOpHash.slice(0, 8)}...
-            {userOpHash.slice(60)}
-          </div>
-          <div style={{ display: "flex" }}>
             Smart Account Address: {address}
           </div>
           <div style={{ display: "flex" }}>FID: {fid}</div>
@@ -53,8 +42,7 @@ export async function GET(request: Request) {
             as indexed on Etherscan)
           </div>
           <div style={{ display: "flex" }}>
-            Source code:
-            https://github.com/pimlicolabs/smart-account-frame-template
+              You can now transfer funds using your smart account
           </div>
         </div>
       ),

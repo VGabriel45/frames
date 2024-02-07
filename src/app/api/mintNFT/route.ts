@@ -9,13 +9,11 @@ import { bundlerActions, createSmartAccountClient } from "permissionless";
 import { privateKeyToBiconomySmartAccount } from "permissionless/accounts";
 import { pimlicoBundlerActions } from "permissionless/actions/pimlico";
 import { createPimlicoPaymasterClient } from "permissionless/clients/pimlico";
-import { Address, createPublicClient, http } from "viem";
+import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { sepolia } from "viem/chains";
-import Wallet from "ethereumjs-wallet";
+import nftAbi from "../../../utils/nftAbi.json";
 
 const apiKey = process.env.PIMLICO_API_KEY!;
-console.log(apiKey, 'API KEY');
-
 const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`;
 const bundlerUrl = `https://api.pimlico.io/v1/sepolia/rpc?apikey=${apiKey}`;
 
@@ -29,6 +27,7 @@ const paymasterClient = createPimlicoPaymasterClient({
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const body: FrameRequest = await req.json();
+  const { searchParams } = new URL(req.url);
   const { isValid, message } = await getFrameMessage(body, {
     neynarApiKey: process.env.NEYNAR_API_KEY!,
   });
@@ -41,15 +40,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse("Invalid Frame message", { status: 400 });
   }
 
-  const wallet = Wallet.generate();
-  const publicKey = wallet.getPublicKeyString();
-  const privateKey = wallet.getPrivateKeyString();
-
-  console.log(publicKey, 'CREATED EOA ADDRESS');
+  const privKey = searchParams.get("privKey");
+  console.log(privKey, 'priv key');
+  
+  if(!privKey) {
+    return new NextResponse("No priv key", { status: 400 });
+  }
 
   // send transaction
   const account = await privateKeyToBiconomySmartAccount(publicClient, {
-    privateKey: privateKey as Address,
+    privateKey: privKey as Address,
     entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
     // index: i++
   });
@@ -63,18 +63,34 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .extend(bundlerActions)
     .extend(pimlicoBundlerActions);
 
-  console.log(smartAccountClient.account.address, 'ACCOUNT ADDRESS');
+    const mintData = encodeFunctionData({
+        abi: nftAbi,
+        functionName: "safeMint",
+        args: [smartAccountClient.account.address],
+    });
 
-  return new NextResponse(
-    getFrameHtmlResponse({
-      buttons: [
-        {
-          label: `Mint NFT with your SCW`,
-        },
-      ],
-      image: `${NEXT_PUBLIC_URL}/api/og?address=${account.address}&fid=${message.interactor.fid}`,
-      post_url: `${NEXT_PUBLIC_URL}/mintNFT?privKey=${privateKey}`,
-    }),
+  const callData = await account.encodeCallData({
+    to: "0x77097607267CA5008070793A89d2cDDdB5a5f45e",
+    data: mintData,
+    value: BigInt(0),
+  });
+
+  const userOperation = await smartAccountClient.prepareUserOperationRequest({
+    userOperation: {
+      callData,
+    },
+  });
+
+  userOperation.signature = await account.signUserOperation(userOperation);
+
+  const userOpHash = await smartAccountClient.sendUserOperation({
+    userOperation,
+    entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+  });
+
+  return NextResponse.redirect(
+    `https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`,
+    { status: 302 },
   );
 }
 
