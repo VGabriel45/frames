@@ -26,12 +26,9 @@ const paymasterClient = createPimlicoPaymasterClient({
 });
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
-  console.log('IN MINT NFT ROUTE');
   const searchParams = req.nextUrl.searchParams
-  console.log(searchParams, 'search params');
 
   const privKey = searchParams.get("privKey");
-  console.log(privKey, 'priv key');
   
   if(!privKey) {
     return new NextResponse("No priv key", { status: 400 });
@@ -77,6 +74,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     userOperation,
     entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
   });
+
+  console.log(userOpHash, 'USER OP HASH');
 
   return NextResponse.redirect(
     `https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`,
