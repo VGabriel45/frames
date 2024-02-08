@@ -1,42 +1,34 @@
-import { NEXT_PUBLIC_URL } from "@/lib/constants";
-import {
-  FrameContainer,
-  FrameImage,
-  FrameButton,
-  useFramesReducer,
-  getPreviousFrame,
-  validateActionSignature,
-} from "frames.js/next/server";
+import { NEXT_PUBLIC_URL } from '@/lib/constants';
+import { getFrameMetadata } from '@coinbase/onchainkit';
+import type { Metadata } from 'next';
 
-const reducer = (state: any) => ({ count: state.count + 1 });
+const frameMetadata = getFrameMetadata({
+  buttons: [
+    {
+      label: 'Start',
+    },
+  ],
+  image: `https://frames.biconomy.io/biconomy_orange_centred.png`,
+  post_url: `${NEXT_PUBLIC_URL}/api/account`,
+});
 
-const CONSTANTS = {
-  IMAGE_URL: "https://frames.biconomy.io/biconomy_orange_centred.png",
+export const metadata: Metadata = {
+  title: 'Biconomy Frame',
+  description: 'Deploy a smart account and mint an nft.',
+  openGraph: {
+    title: 'Biconomy Frame',
+    description: 'Deploy a smart account and mint an nft.',
+    images: [`https://frames.biconomy.io/biconomy_orange_centred.png`],
+  },
+  other: {
+    ...frameMetadata,
+  },
 };
 
-export default async function Page(props: {
-  searchParams: { [key: string]: string | string[] | undefined } | undefined;
-}) {
-  const previousFrame = getPreviousFrame(props.searchParams);
-
-  await validateActionSignature(previousFrame.postBody);
-
-  const [state, _dispatch] = useFramesReducer(
-    reducer,
-    { count: 0 },
-    previousFrame,
-  );
-
+export default function Page() {
   return (
     <>
-      <FrameContainer
-        postUrl="/frames"
-        state={state}
-        previousFrame={previousFrame}
-      >
-        <FrameImage src={CONSTANTS.IMAGE_URL} />
-        <FrameButton href={`${NEXT_PUBLIC_URL}/account`}>📊 Start</FrameButton>
-      </FrameContainer>
+      <h1>Biconomy Frame</h1>
     </>
   );
 }
