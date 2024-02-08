@@ -1,14 +1,42 @@
-import BiconomyOrangeWordmark from "../icons/BiconomyOrangeWordmark";
+import { NEXT_PUBLIC_URL } from "@/lib/constants";
+import {
+  FrameContainer,
+  FrameImage,
+  FrameButton,
+  useFramesReducer,
+  getPreviousFrame,
+  validateActionSignature,
+} from "frames.js/next/server";
 
-export default function Home() {
+const reducer = (state: any) => ({ count: state.count + 1 });
+
+const CONSTANTS = {
+  IMAGE_URL: "https://frames.biconomy.io/biconomy_orange_centred.png",
+};
+
+export default async function Page(props: {
+  searchParams: { [key: string]: string | string[] | undefined } | undefined;
+}) {
+  const previousFrame = getPreviousFrame(props.searchParams);
+
+  await validateActionSignature(previousFrame.postBody);
+
+  const [state, _dispatch] = useFramesReducer(
+    reducer,
+    { count: 0 },
+    previousFrame,
+  );
+
   return (
-    <main className="min-h-screen bg-slate-950">
-      <div className="flex flex-col  items-center">
-        <div className="w-full max-w-2xl">
-          <BiconomyOrangeWordmark />
-        </div>
-        <h1 className="text-6xl  text-white">Frames</h1>
-      </div>
-    </main>
+    <>
+      <FrameContainer
+        postUrl="/frames"
+        state={state}
+        previousFrame={previousFrame}
+      >
+        <FrameImage src={CONSTANTS.IMAGE_URL} />
+        <FrameButton href={`${NEXT_PUBLIC_URL}/account`}>📊 Start</FrameButton>
+      </FrameContainer>
+    </>
   );
 }
