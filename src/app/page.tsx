@@ -1,24 +1,24 @@
-import { NEXT_PUBLIC_URL } from '@/lib/constants';
-import { getFrameMetadata } from '@coinbase/onchainkit';
-import type { Metadata } from 'next';
+import { NEXT_PUBLIC_URL } from "@/lib/constants";
+import { getFrameMetadata } from "@coinbase/onchainkit";
+import type { Metadata } from "next";
 
 const frameMetadata = getFrameMetadata({
   buttons: [
     {
-      label: 'Start',
+      label: "Deploy Smart Account",
     },
   ],
-  image: `https://frames.biconomy.io/biconomy_orange_centred.png`,
+  image: `${NEXT_PUBLIC_URL}/opengraph.jpg`,
   post_url: `${NEXT_PUBLIC_URL}/api/account`,
 });
 
 export const metadata: Metadata = {
-  title: 'Biconomy Frame',
-  description: 'Deploy a smart account and mint an nft.',
+  title: "Smart Account Frame Template",
+  description: "LFG",
   openGraph: {
-    title: 'Biconomy Frame',
-    description: 'Deploy a smart account and mint an nft.',
-    images: [`https://frames.biconomy.io/biconomy_orange_centred.png`],
+    title: "Smart Account Frame Templatess",
+    description: "LFG",
+    images: [`${NEXT_PUBLIC_URL}/opengraph.png`],
   },
   other: {
     ...frameMetadata,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <>
-      <h1>Biconomy Frame</h1>
+      <h1>Smart Account Frame Template</h1>
     </>
   );
 }
