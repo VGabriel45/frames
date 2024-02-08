@@ -65,8 +65,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .extend(pimlicoBundlerActions);
 
   console.log(smartAccountClient.account.address, 'ACCOUNT ADDRESS');
-
+  console.log(process.env.ENCRYPTION_KEY!, 'CRYPT KEY');
+  
+  
   const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
+  console.log(cryptr.encrypt(privateKey), "PRIVATE KEY");
 
   return new NextResponse(
     getFrameHtmlResponse({
