@@ -89,7 +89,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   //   }),
   // );
 
-  return NextResponse.redirect(`https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`)
+  return NextResponse.redirect(`${NEXT_PUBLIC_URL}/redirect?userOpHash=${userOpHash}`, {status: 302});
 }
 
 export const dynamic = "force-dynamic";
