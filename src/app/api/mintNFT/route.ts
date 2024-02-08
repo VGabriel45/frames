@@ -89,7 +89,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   //   }),
   // );
 
-  return NextResponse.redirect(`${NEXT_PUBLIC_URL}/redirect?userOpHash=${userOpHash}`, {status: 302});
+  const headers = new Headers();
+  headers.set("Location", `${NEXT_PUBLIC_URL}/`);
+  return NextResponse.redirect(`${NEXT_PUBLIC_URL}/redirect?userOpHash=${userOpHash}`, {status: 302, headers});
 }
 
 export const dynamic = "force-dynamic";
