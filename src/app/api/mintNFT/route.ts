@@ -25,7 +25,7 @@ const paymasterClient = createPimlicoPaymasterClient({
   transport: http(paymasterUrl),
 });
 
-export async function POST(req: NextRequest): Promise<NextResponse> {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   console.log('IN MINT NFT ROUTE');
   const searchParams = req.nextUrl.searchParams
   console.log(searchParams, 'search params');
