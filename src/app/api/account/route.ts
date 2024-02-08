@@ -12,6 +12,7 @@ import { createPimlicoPaymasterClient } from "permissionless/clients/pimlico";
 import { Address, createPublicClient, http } from "viem";
 import { sepolia } from "viem/chains";
 import Wallet from "ethereumjs-wallet";
+import Cryptr from "cryptr";
 
 const apiKey = process.env.PIMLICO_API_KEY!;
 console.log(apiKey, 'API KEY');
@@ -65,6 +66,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   console.log(smartAccountClient.account.address, 'ACCOUNT ADDRESS');
 
+  const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
+
   return new NextResponse(
     getFrameHtmlResponse({
       buttons: [
@@ -74,7 +77,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         },
       ],
       image: `${NEXT_PUBLIC_URL}/api/og?address=${account.address}&fid=${message.interactor.fid}`,
-      post_url: `${NEXT_PUBLIC_URL}/api/mintNFT?privKey=${privateKey}`,
+      post_url: `${NEXT_PUBLIC_URL}/api/mintNFT?privKey=${cryptr.encrypt(privateKey)}`,
     }),
   );
 }

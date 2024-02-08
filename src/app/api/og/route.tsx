@@ -34,12 +34,13 @@ export async function GET(request: Request) {
           }}
         >
           <div style={{ display: "flex" }}>
-            Smart Account Address: {address}
+            Smart Account Address on Sepolia: {address}
           </div>
           <div style={{ display: "flex" }}>FID: {fid}</div>
+          <div style={{ display: "flex" }}>Temporary EOA Priv Key: {fid}</div>
           <div style={{ display: "flex" }}>
-            Your smart account has been deployed to Sepolia (might take a minute to show up
-            as indexed on Etherscan)
+            The private key gives you control over the EOA 
+            that will act as the owner of the smart account.
           </div>
           <div style={{ display: "flex" }}>
               You can now Mint an NFT using your Biconomy Smart Account, you will be redirected to the Jiffy Scan 
