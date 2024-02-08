@@ -27,72 +27,59 @@ const paymasterClient = createPimlicoPaymasterClient({
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   console.log('IN MINT NFT ROUTE');
-  const body: FrameRequest = await req.json();
-  console.log(body, 'body');
   const searchParams = req.nextUrl.searchParams
   console.log(searchParams, 'search params');
-  // const { isValid, message } = await getFrameMessage(body, {
-  //   neynarApiKey: process.env.NEYNAR_API_KEY!,
-  // });
 
-  // if (!isValid) {
-  //   return new NextResponse("Invalid Frame message", { status: 400 });
-  // }
-
-  // if (!message) {
-  //   return new NextResponse("Invalid Frame message", { status: 400 });
-  // }
-
-  // const privKey = searchParams.get("privKey");
-  // console.log(privKey, 'priv key');
+  const privKey = searchParams.get("privKey");
+  console.log(privKey, 'priv key');
   
-  // if(!privKey) {
-  //   return new NextResponse("No priv key", { status: 400 });
-  // }
+  if(!privKey) {
+    return new NextResponse("No priv key", { status: 400 });
+  }
 
-  // // send transaction
-  // const account = await privateKeyToBiconomySmartAccount(publicClient, {
-  //   privateKey: privKey as Address,
-  //   entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
-  //   // index: i++
-  // });
+  // send transaction
+  const account = await privateKeyToBiconomySmartAccount(publicClient, {
+    privateKey: privKey as Address,
+    entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
+    // index: i++
+  });
 
-  // const smartAccountClient = createSmartAccountClient({
-  //   account,
-  //   chain: sepolia,
-  //   transport: http(bundlerUrl),
-  //   sponsorUserOperation: paymasterClient.sponsorUserOperation,
-  // })
-  //   .extend(bundlerActions)
-  //   .extend(pimlicoBundlerActions);
+  const smartAccountClient = createSmartAccountClient({
+    account,
+    chain: sepolia,
+    transport: http(bundlerUrl),
+    sponsorUserOperation: paymasterClient.sponsorUserOperation,
+  })
+    .extend(bundlerActions)
+    .extend(pimlicoBundlerActions);
 
-  //   const mintData = encodeFunctionData({
-  //       abi: nftAbi,
-  //       functionName: "safeMint",
-  //       args: [smartAccountClient.account.address],
-  //   });
+    const mintData = encodeFunctionData({
+        abi: nftAbi,
+        functionName: "safeMint",
+        args: [smartAccountClient.account.address],
+    });
 
-  // const callData = await account.encodeCallData({
-  //   to: "0x77097607267CA5008070793A89d2cDDdB5a5f45e",
-  //   data: mintData,
-  //   value: BigInt(0),
-  // });
+  const callData = await account.encodeCallData({
+    to: "0x77097607267CA5008070793A89d2cDDdB5a5f45e",
+    data: mintData,
+    value: BigInt(0),
+  });
 
-  // const userOperation = await smartAccountClient.prepareUserOperationRequest({
-  //   userOperation: {
-  //     callData,
-  //   },
-  // });
+  const userOperation = await smartAccountClient.prepareUserOperationRequest({
+    userOperation: {
+      callData,
+    },
+  });
 
-  // userOperation.signature = await account.signUserOperation(userOperation);
+  userOperation.signature = await account.signUserOperation(userOperation);
 
-  // const userOpHash = await smartAccountClient.sendUserOperation({
-  //   userOperation,
-  //   entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-  // });
+  const userOpHash = await smartAccountClient.sendUserOperation({
+    userOperation,
+    entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+  });
 
   return NextResponse.redirect(
-    `https://jiffyscan.xyz/userOpHash/${""}?network=sepolia`,
+    `https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`,
     { status: 302 },
   );
 }
