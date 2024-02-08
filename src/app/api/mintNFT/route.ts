@@ -77,9 +77,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   console.log(userOpHash, 'USER OP HASH');
 
-  return NextResponse.redirect(
-    `https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`,
-    { status: 302 },
+  return new NextResponse(
+    getFrameHtmlResponse({
+      buttons: [
+        {
+          label: `Mint NFT with your SCW`,
+        },
+      ],
+      image: `${NEXT_PUBLIC_URL}/api/og?userOpHash=${userOpHash}`,
+    }),
   );
 }
 
