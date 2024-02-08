@@ -1,9 +1,4 @@
 import { NEXT_PUBLIC_URL } from "@/lib/constants";
-import {
-  FrameRequest,
-  getFrameHtmlResponse,
-  getFrameMessage,
-} from "@coinbase/onchainkit";
 import { NextRequest, NextResponse } from "next/server";
 import { bundlerActions, createSmartAccountClient } from "permissionless";
 import { privateKeyToBiconomySmartAccount } from "permissionless/accounts";
@@ -12,7 +7,6 @@ import { createPimlicoPaymasterClient } from "permissionless/clients/pimlico";
 import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { sepolia } from "viem/chains";
 import nftAbi from "../../../utils/nftAbi.json";
-import Cryptr from "cryptr";
 
 const apiKey = process.env.PIMLICO_API_KEY!;
 const paymasterUrl = `https://api.pimlico.io/v2/sepolia/rpc?apikey=${apiKey}`;
@@ -35,12 +29,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return new NextResponse("No priv key", { status: 400 });
   }
 
-  const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
-  const decryptedPrivKey = cryptr.decrypt(privKey);
-
   // send transaction
   const account = await privateKeyToBiconomySmartAccount(publicClient, {
-    privateKey: decryptedPrivKey as Address,
+    privateKey: privKey as Address,
     entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
     // index: i++
   });

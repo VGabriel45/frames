@@ -37,7 +37,7 @@ export async function GET(request: Request) {
             Smart Account Address on Sepolia: {address}
           </div>
           <div style={{ display: "flex" }}>FID: {fid}</div>
-          <div style={{ display: "flex" }}>Temporary EOA Priv Key: {fid}</div>
+          <div style={{ display: "flex" }}>Temporary EOA Priv Key is shared in your frame url</div>
           <div style={{ display: "flex" }}>
             The private key gives you control over the EOA 
             that will act as the owner of the smart account.
