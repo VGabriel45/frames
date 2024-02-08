@@ -73,7 +73,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         },
       ],
       image: `${NEXT_PUBLIC_URL}/api/og?address=${account.address}&fid=${message.interactor.fid}`,
-      post_url: `${NEXT_PUBLIC_URL}/mintNFT?privKey=${privateKey}`,
+      post_url: `${NEXT_PUBLIC_URL}/api/mintNFT?privKey=${privateKey}`,
     }),
   );
 }
