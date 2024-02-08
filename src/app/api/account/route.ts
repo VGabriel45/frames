@@ -69,6 +69,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     getFrameHtmlResponse({
       buttons: [
         {
+          action: "post_redirect",
           label: `Mint NFT with your SCW`,
         },
       ],
