@@ -5,7 +5,7 @@ const nextConfig = {
       return [
         {
           source: '/redirect',
-          destination: 'https://jiffyscan.xyz',
+          destination: 'https://jiffyscan.xyz/userOpHash/:userOpHash?network=sepolia',
           permanent: false
         }
       ]
