@@ -77,17 +77,19 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   console.log(userOpHash, 'USER OP HASH');
 
-  return new NextResponse(
-    getFrameHtmlResponse({
-      buttons: [
-        {
-          label: `See your User Op`,
-        },
-      ],
-      image: `${NEXT_PUBLIC_URL}/api/og?userOpHash=${userOpHash}`,
-      post_url: `https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`,
-    }),
-  );
+  // return new NextResponse(
+  //   getFrameHtmlResponse({
+  //     buttons: [
+  //       {
+  //         label: `See your User Op`,
+  //       },
+  //     ],
+  //     image: `${NEXT_PUBLIC_URL}/api/og?userOpHash=${userOpHash}`,
+  //     post_url: `https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`,
+  //   }),
+  // );
+
+  return NextResponse.redirect(`https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`)
 }
 
 export const dynamic = "force-dynamic";
