@@ -69,6 +69,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   
   
   const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
+  const encryptedPvkey = cryptr.encrypt(privateKey);
   console.log(cryptr.encrypt(privateKey), "PRIVATE KEY");
 
   return new NextResponse(
@@ -80,7 +81,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         },
       ],
       image: `${NEXT_PUBLIC_URL}/api/og?address=${account.address}&fid=${message.interactor.fid}`,
-      post_url: `${NEXT_PUBLIC_URL}/api/mintNFT?privKey=${cryptr.encrypt(privateKey)}`,
+      post_url: `${NEXT_PUBLIC_URL}/api/mintNFT?privKey=${encryptedPvkey}`,
     }),
   );
 }

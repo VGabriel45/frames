@@ -36,10 +36,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   }
 
   const cryptr = new Cryptr(process.env.ENCRYPTION_KEY!);
+  const decryptedPrivKey = cryptr.decrypt(privKey);
 
   // send transaction
   const account = await privateKeyToBiconomySmartAccount(publicClient, {
-    privateKey: cryptr.decrypt(privKey) as Address,
+    privateKey: decryptedPrivKey as Address,
     entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // global entrypoint
     // index: i++
   });
