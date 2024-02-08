@@ -81,10 +81,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     getFrameHtmlResponse({
       buttons: [
         {
-          label: `Mint NFT with your SCW`,
+          label: `See your User Op`,
         },
       ],
       image: `${NEXT_PUBLIC_URL}/api/og?userOpHash=${userOpHash}`,
+      post_url: `https://jiffyscan.xyz/userOpHash/${userOpHash}?network=sepolia`,
     }),
   );
 }
