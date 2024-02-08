@@ -16,7 +16,7 @@ export async function GET(request: Request) {
       });
     }
 
-    if(userOpHash) {
+    if (userOpHash) {
       return new ImageResponse(
         (
           <div
@@ -36,8 +36,15 @@ export async function GET(request: Request) {
             }}
           >
             <div style={{ display: "flex" }}>
-              User op hash generated:
-              <input title="User op hash" value={userOpHash}/> 
+              User op hash generated: {userOpHash}
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(userOpHash);
+                  alert("UserOpHash copied to clipboard!");
+                }}
+              >
+                Copy
+              </button>
             </div>
           </div>
         ),

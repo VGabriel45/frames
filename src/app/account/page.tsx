@@ -8,7 +8,7 @@ const frameMetadata = getFrameMetadata({
       label: "Deploy Smart Account",
     },
   ],
-  image: `${NEXT_PUBLIC_URL}/main.png`,
+  image: `${NEXT_PUBLIC_URL}/opengraph.jpg`,
   post_url: `${NEXT_PUBLIC_URL}/api/account`,
 });
 
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Smart Account Frame Templatess",
     description: "LFG",
-    images: [`${NEXT_PUBLIC_URL}/main.png`],
+    images: [`${NEXT_PUBLIC_URL}/opengraph.png`],
   },
   other: {
     ...frameMetadata,
